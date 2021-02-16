@@ -11,6 +11,7 @@ export default function TodoList() {
   const [newTodo, setNewTodo] = useState<string>("");
   const [editing, setEditing] = useState<number>(-1);
   const [editingValue, setEditingValue] = useState<string>("");
+  const [showCompleted, setShowCompleted] = useState<boolean>(true);
 
   const createItem = (e: FormEvent) => {
     e.preventDefault();
@@ -39,29 +40,35 @@ export default function TodoList() {
 
   return (
     <div className="todo-list">
+      <button onClick={() => setShowCompleted(!showCompleted)}>
+        {showCompleted ? "Hide Completed" : "Show Completed"}
+      </button>
       {todoList.length > 0 ? (
-        todoList.map((item: Item, index: number) => (
-          <div className="list-item" key={index}>
-            <button onClick={() => toggleTask(index)}>
-              {item.done ? "check" : "uncheck"}
-            </button>
-            {editing === index ? (
-              <form onSubmit={(event) => saveEdit(event)}>
-                <input
-                  type="text"
-                  value={editingValue}
-                  onChange={(e) => setEditingValue(e.target.value)}
-                />
-                <button type="submit">Save</button>
-                <button onClick={() => setEditing(-1)}>Cancel</button>
-              </form>
-            ) : (
-              <div>
-                <div onClick={() => startEditing(index)}>{item.title}</div>
+        todoList.map(
+          (item: Item, index: number) =>
+            (showCompleted || !item.done) && (
+              <div className="list-item" key={index}>
+                <button onClick={() => toggleTask(index)}>
+                  {item.done ? "check" : "uncheck"}
+                </button>
+                {editing === index ? (
+                  <form onSubmit={(event) => saveEdit(event)}>
+                    <input
+                      type="text"
+                      value={editingValue}
+                      onChange={(e) => setEditingValue(e.target.value)}
+                    />
+                    <button type="submit">Save</button>
+                    <button onClick={() => setEditing(-1)}>Cancel</button>
+                  </form>
+                ) : (
+                  <div>
+                    <div onClick={() => startEditing(index)}>{item.title}</div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        ))
+            )
+        )
       ) : (
         <div>Empty</div>
       )}
