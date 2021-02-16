@@ -31,11 +31,20 @@ export default function TodoList() {
     setEditing(-1);
   };
 
+  const toggleTask = (index: number) => {
+    let newList = [...todoList];
+    newList[index].done = !todoList[index].done;
+    setTodoList(newList);
+  };
+
   return (
     <div className="todo-list">
       {todoList.length > 0 ? (
         todoList.map((item: Item, index: number) => (
           <div className="list-item" key={index}>
+            <button onClick={() => toggleTask(index)}>
+              {item.done ? "check" : "uncheck"}
+            </button>
             {editing === index ? (
               <form onSubmit={(event) => saveEdit(event)}>
                 <input
@@ -44,9 +53,12 @@ export default function TodoList() {
                   onChange={(e) => setEditingValue(e.target.value)}
                 />
                 <button type="submit">Save</button>
+                <button onClick={() => setEditing(-1)}>Cancel</button>
               </form>
             ) : (
-              <div onClick={() => startEditing(index)}>{item.title}</div>
+              <div>
+                <div onClick={() => startEditing(index)}>{item.title}</div>
+              </div>
             )}
           </div>
         ))
