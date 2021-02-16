@@ -1,6 +1,15 @@
 import React, { useState, FormEvent } from "react";
 import "./styles.css";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircle,
+  faCheckCircle,
+  faSave,
+  faTimesCircle,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
+
 interface Item {
   title: string;
   done: boolean;
@@ -15,8 +24,10 @@ export default function TodoList() {
 
   const createItem = (e: FormEvent) => {
     e.preventDefault();
-    setTodoList([...todoList, { title: newTodo, done: false }]);
-    setNewTodo("");
+    if (newTodo !== "") {
+      setTodoList([...todoList, { title: newTodo, done: false }]);
+      setNewTodo("");
+    }
   };
 
   const startEditing = (index: number) => {
@@ -26,10 +37,12 @@ export default function TodoList() {
 
   const saveEdit = (e: FormEvent) => {
     e.preventDefault();
-    let newList = [...todoList];
-    newList[editing].title = editingValue;
-    setTodoList(newList);
-    setEditing(-1);
+    if (editingValue !== "") {
+      let newList = [...todoList];
+      newList[editing].title = editingValue;
+      setTodoList(newList);
+      setEditing(-1);
+    }
   };
 
   const toggleTask = (index: number) => {
@@ -39,49 +52,77 @@ export default function TodoList() {
   };
 
   return (
-    <div className="todo-list">
-      <button onClick={() => setShowCompleted(!showCompleted)}>
-        {showCompleted ? "Hide Completed" : "Show Completed"}
-      </button>
-      {todoList.length > 0 ? (
-        todoList.map(
-          (item: Item, index: number) =>
-            (showCompleted || !item.done) && (
-              <div className="list-item" key={index}>
-                <button onClick={() => toggleTask(index)}>
-                  {item.done ? "check" : "uncheck"}
-                </button>
-                {editing === index ? (
-                  <form onSubmit={(event) => saveEdit(event)}>
-                    <input
-                      type="text"
-                      value={editingValue}
-                      onChange={(e) => setEditingValue(e.target.value)}
+    <div>
+      <div className="todo-list">
+        <div className="list-item">
+          <form onSubmit={createItem}>
+            <input
+              className="edit-input"
+              type="text"
+              placeholder="New To Do"
+              value={newTodo}
+              onChange={(event) => setNewTodo(event.target.value)}
+            />
+            <button type="submit" className="confirm-button">
+              <FontAwesomeIcon icon={faPlus} />
+            </button>
+          </form>
+          <button onClick={() => setShowCompleted(!showCompleted)}>
+            {showCompleted ? "Hide Completed" : "Show Completed"}
+          </button>
+        </div>
+      </div>
+      <div className="todo-list">
+        {todoList.length > 0 ? (
+          todoList.map(
+            (item: Item, index: number) =>
+              (showCompleted || !item.done) && (
+                <div className="list-item" key={index}>
+                  <div
+                    className="check-container"
+                    onClick={() => toggleTask(index)}
+                  >
+                    <FontAwesomeIcon
+                      size={"2x"}
+                      icon={item.done ? faCheckCircle : faCircle}
                     />
-                    <button type="submit">Save</button>
-                    <button onClick={() => setEditing(-1)}>Cancel</button>
-                  </form>
-                ) : (
-                  <div>
-                    <div onClick={() => startEditing(index)}>{item.title}</div>
                   </div>
-                )}
-              </div>
-            )
-        )
-      ) : (
-        <div>Empty</div>
-      )}
-      <div className="">
-        <form onSubmit={createItem}>
-          <input
-            type="text"
-            placeholder="New To Do"
-            value={newTodo}
-            onChange={(event) => setNewTodo(event.target.value)}
-          ></input>
-          <button type="submit">+</button>
-        </form>
+                  {editing === index ? (
+                    <form onSubmit={(event) => saveEdit(event)}>
+                      <input
+                        className="edit-input"
+                        type="text"
+                        value={editingValue}
+                        onChange={(e) => setEditingValue(e.target.value)}
+                      />
+                      <button type="submit" className="confirm-button">
+                        <FontAwesomeIcon icon={faSave} />
+                      </button>
+                      <button
+                        onClick={() => setEditing(-1)}
+                        className="last-button cancel-button"
+                      >
+                        <FontAwesomeIcon icon={faTimesCircle} />
+                      </button>
+                    </form>
+                  ) : (
+                    <div
+                      className={
+                        item.done ? "list-title title-done" : "list-title"
+                      }
+                      onClick={() => startEditing(index)}
+                    >
+                      {item.title}
+                    </div>
+                  )}
+                </div>
+              )
+          )
+        ) : (
+          <div className="list-item">
+            <div className="list-title">Empty</div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,16 +1,90 @@
+form {
+  display: flex;
+  flex: 1;
+}
+
 .todo-list {
-  max-width: 800px;
-  background-color: gray; 
+  max-width: 830px;
   margin: 0 auto;
-  padding: 15px 0 15px 0;
-  height: calc(93vh - 30px);
+  max-height: 65vh;
   overflow-y: scroll;
 }
 
 .list-item {
-  width: calc(100% - 60px);
+  width: calc(100% - 30px);
   background-color: white;
   margin: 15px;
   border-radius: 4px;
   display: flex;
+  height: 60px;
+  align-items: center;
+  box-shadow: 0px 0 4px 0 rgb(0 0 0 / 20%);
+}
+
+.list-title {
+  flex: 1;
+  text-align: start;
+  margin-left: 15px;
+  font-size: 20px;
+}
+
+.title-done {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.check-container {
+  width: 70px;
+  border-radius: 4px 0 0 4px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid;
+  border-width: 0 1px 0 0;
+  border-color: lightgray;
+}
+
+.edit-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding-left: 15px;
+  font-size: 20px;
+}
+
+.edit-input:focus {
+  outline: none;
+}
+
+/* Buttons Style */
+
+button {
+  height: 60px;
+  border: none;
+  padding: 15px;
+}
+
+button:hover{
+  opacity: 0.7;
+}
+
+button:focus{ 
+  outline: none;
+}
+
+button:active{
+  box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.25);
+}
+
+.last-button {
+  border-radius: 0 4px 4px 0;
+}
+
+.confirm-button {
+  background-color: #adffc0;
+}
+
+.cancel-button {
+  background-color: #ffadad;
 }
