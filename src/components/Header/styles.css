@@ -1,0 +1,13 @@
+header {
+  width: 100vw;
+  min-height:7vh;
+  background-color: blue;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+#logo {
+  height: 5vh;
+  margin: 15px;
+}
