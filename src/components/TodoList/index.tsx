@@ -71,6 +71,7 @@ export default function TodoList() {
             {showCompleted ? "Hide Completed" : "Show Completed"}
           </button>
         </div>
+        *To edit click on the task title
       </div>
       <div className="todo-list">
         {todoList.length > 0 ? (
