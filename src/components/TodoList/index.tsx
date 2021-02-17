@@ -25,6 +25,47 @@ const TodoList = observer((props: Props) => {
   const [editingValue, setEditingValue] = useState<string>("");
   const [showCompleted, setShowCompleted] = useState<boolean>(true);
 
+  const renderList = (list: TodoListClass) =>
+    list.todos.map(
+      (item: TodoItemClass, index: number) =>
+        (showCompleted || !item.done) && (
+          <div className="list-item" key={index}>
+            <div className="check-container" onClick={() => toggleTask(item)}>
+              <FontAwesomeIcon
+                size={"2x"}
+                icon={item.done ? faCheckCircle : faCircle}
+              />
+            </div>
+            {editing === item.id ? (
+              <form onSubmit={(event) => saveEdit(event, item)}>
+                <input
+                  className="edit-input"
+                  type="text"
+                  value={editingValue}
+                  onChange={(e) => setEditingValue(e.target.value)}
+                />
+                <button type="submit" className="confirm-button">
+                  <FontAwesomeIcon icon={faSave} />
+                </button>
+                <button
+                  onClick={() => setEditing(-1)}
+                  className="last-button cancel-button"
+                >
+                  <FontAwesomeIcon icon={faTimesCircle} />
+                </button>
+              </form>
+            ) : (
+              <div
+                className={item.done ? "list-title title-done" : "list-title"}
+                onClick={() => startEditing(item.id)}
+              >
+                {item.title}
+              </div>
+            )}
+          </div>
+        )
+    );
+
   const createItem = (e: FormEvent) => {
     e.preventDefault();
     if (newTodo !== "") {
@@ -81,50 +122,7 @@ const TodoList = observer((props: Props) => {
       </div>
       <div className="todo-list">
         {todoList.length > 0 ? (
-          todoList.todos.map(
-            (item: TodoItemClass, index: number) =>
-              (showCompleted || !item.done) && (
-                <div className="list-item" key={index}>
-                  <div
-                    className="check-container"
-                    onClick={() => toggleTask(item)}
-                  >
-                    <FontAwesomeIcon
-                      size={"2x"}
-                      icon={item.done ? faCheckCircle : faCircle}
-                    />
-                  </div>
-                  {editing === item.id ? (
-                    <form onSubmit={(event) => saveEdit(event, item)}>
-                      <input
-                        className="edit-input"
-                        type="text"
-                        value={editingValue}
-                        onChange={(e) => setEditingValue(e.target.value)}
-                      />
-                      <button type="submit" className="confirm-button">
-                        <FontAwesomeIcon icon={faSave} />
-                      </button>
-                      <button
-                        onClick={() => setEditing(-1)}
-                        className="last-button cancel-button"
-                      >
-                        <FontAwesomeIcon icon={faTimesCircle} />
-                      </button>
-                    </form>
-                  ) : (
-                    <div
-                      className={
-                        item.done ? "list-title title-done" : "list-title"
-                      }
-                      onClick={() => startEditing(item.id)}
-                    >
-                      {item.title}
-                    </div>
-                  )}
-                </div>
-              )
-          )
+          renderList(todoList)
         ) : (
           <div className="list-item">
             <div className="list-title">No Tasks!</div>
