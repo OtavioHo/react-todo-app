@@ -9,14 +9,17 @@ import {
   faTimesCircle,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { observer } from "mobx-react-lite";
 
-interface Item {
-  title: string;
-  done: boolean;
+import TodoListClass from "../../models/TodoListClass";
+import TodoItemClass from "../../models/TodoItemClass";
+
+interface Props {
+  todoList: TodoListClass;
 }
 
-export default function TodoList() {
-  const [todoList, setTodoList] = useState<Item[]>([]);
+const TodoList = observer((props: Props) => {
+  const { todoList } = props;
   const [newTodo, setNewTodo] = useState<string>("");
   const [editing, setEditing] = useState<number>(-1);
   const [editingValue, setEditingValue] = useState<string>("");
@@ -25,30 +28,28 @@ export default function TodoList() {
   const createItem = (e: FormEvent) => {
     e.preventDefault();
     if (newTodo !== "") {
-      setTodoList([...todoList, { title: newTodo, done: false }]);
+      todoList.add(new TodoItemClass(newTodo));
       setNewTodo("");
     }
   };
 
   const startEditing = (index: number) => {
-    setEditingValue(todoList[index].title);
+    setEditingValue(
+      todoList.todos.filter((item) => item.id === index)[0].title
+    );
     setEditing(index);
   };
 
-  const saveEdit = (e: FormEvent) => {
+  const saveEdit = (e: FormEvent, item: TodoItemClass) => {
     e.preventDefault();
     if (editingValue !== "") {
-      let newList = [...todoList];
-      newList[editing].title = editingValue;
-      setTodoList(newList);
+      item.title = editingValue;
       setEditing(-1);
     }
   };
 
-  const toggleTask = (index: number) => {
-    let newList = [...todoList];
-    newList[index].done = !todoList[index].done;
-    setTodoList(newList);
+  const toggleTask = (item: TodoItemClass) => {
+    item.toggle();
   };
 
   return (
@@ -80,21 +81,21 @@ export default function TodoList() {
       </div>
       <div className="todo-list">
         {todoList.length > 0 ? (
-          todoList.map(
-            (item: Item, index: number) =>
+          todoList.todos.map(
+            (item: TodoItemClass, index: number) =>
               (showCompleted || !item.done) && (
                 <div className="list-item" key={index}>
                   <div
                     className="check-container"
-                    onClick={() => toggleTask(index)}
+                    onClick={() => toggleTask(item)}
                   >
                     <FontAwesomeIcon
                       size={"2x"}
                       icon={item.done ? faCheckCircle : faCircle}
                     />
                   </div>
-                  {editing === index ? (
-                    <form onSubmit={(event) => saveEdit(event)}>
+                  {editing === item.id ? (
+                    <form onSubmit={(event) => saveEdit(event, item)}>
                       <input
                         className="edit-input"
                         type="text"
@@ -116,7 +117,7 @@ export default function TodoList() {
                       className={
                         item.done ? "list-title title-done" : "list-title"
                       }
-                      onClick={() => startEditing(index)}
+                      onClick={() => startEditing(item.id)}
                     >
                       {item.title}
                     </div>
@@ -132,4 +133,6 @@ export default function TodoList() {
       </div>
     </div>
   );
-}
+});
+
+export default TodoList;
