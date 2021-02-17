@@ -120,7 +120,7 @@ export default function TodoList() {
           )
         ) : (
           <div className="list-item">
-            <div className="list-title">Empty</div>
+            <div className="list-title">No Tasks!</div>
           </div>
         )}
       </div>
