@@ -67,11 +67,16 @@ export default function TodoList() {
               <FontAwesomeIcon icon={faPlus} />
             </button>
           </form>
-          <button onClick={() => setShowCompleted(!showCompleted)}>
+        </div>
+        <div className="todo-list">
+          <button
+            className="toggle-checked-button"
+            onClick={() => setShowCompleted(!showCompleted)}
+          >
             {showCompleted ? "Hide Completed" : "Show Completed"}
           </button>
+          *To edit click on the task title
         </div>
-        *To edit click on the task title
       </div>
       <div className="todo-list">
         {todoList.length > 0 ? (

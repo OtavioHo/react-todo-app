@@ -89,3 +89,10 @@ button:active{
 .cancel-button {
   background-color: #ffadad;
 }
+
+.toggle-checked-button {
+  border-radius: 4px;
+  margin: 0 15px 0 15px;
+  height: fit-content;
+  box-shadow: 0px 0 4px 0 rgb(0 0 0 / 20%);
+}
